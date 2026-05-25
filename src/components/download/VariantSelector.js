@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   getReleaseDownloadUrl,
   getReleaseFileHash,
+  getReleaseFilename,
   getReleaseDateWithTime,
 } from "../../utils/releaseUtils";
 import Button from "../common/Button";
@@ -146,9 +147,7 @@ const VariantSelector = ({
                   </>
                 )
               : getVariantName(variant);
-            const filename = downloadUrl
-              ? downloadUrl.split("/").pop()
-              : "file";
+            const filename = getReleaseFilename(release) ?? (downloadUrl ? downloadUrl.split("/").pop() : "file");
 
             return (
               <VariantOption

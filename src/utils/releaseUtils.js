@@ -167,6 +167,26 @@ export const getReleaseDownloadUrl = (release) => {
 };
 
 /**
+ * Get the filename for a release, including the correct extension.
+ * Uses the 'filename' tag when present; otherwise derives the name from
+ * the URL and appends the format extension (.ipk / .apk) if missing.
+ * @param {Object} release - The Nostr event containing release information
+ * @returns {string} The filename with extension, or null
+ */
+export const getReleaseFilename = (release) => {
+  const tagged = getMatchingTags(release, "filename")?.[0]?.[1];
+  if (tagged) return tagged;
+
+  const url = getReleaseDownloadUrl(release);
+  if (!url) return null;
+
+  const base = url.split("/").pop();
+  const format = getReleaseFormat(release);
+  const ext = format === "apk" ? ".apk" : ".ipk";
+  return base.endsWith(ext) ? base : `${base}${ext}`;
+};
+
+/**
  * Get the file hash for verification
  * @param {Object} release - The Nostr event containing release information
  * @returns {string} The file hash or null
